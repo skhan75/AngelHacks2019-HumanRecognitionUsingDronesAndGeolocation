@@ -2,7 +2,7 @@
   "body": "eyJ0ZXN0IjoiYm9keSJ9",
   "resource": "/{proxy+}",
   "path": "/",
-  "httpMethod": "POST",
+  "httpMethod": "GET",
   "isBase64Encoded": true,
   "queryStringParameters": {
     "name": "World"

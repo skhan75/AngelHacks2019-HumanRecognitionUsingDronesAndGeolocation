@@ -1,17 +1,19 @@
 const express = require('express');
-const app = express();
-const bodyParser = require("body-parser");
-
 const fs = require('fs');
+const bodyParser = require("body-parser");
+const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware');
+
+const app = express();
+app.use(awsServerlessExpressMiddleware.eventContext());
 
 const VisualRecognitionV3 = require('watson-developer-cloud/visual-recognition/v3');
 
 const visualRecognition = new VisualRecognitionV3({
 	version: '2019-05-17',
-	iam_apikey: 'Actw2Gkyp7mACcVfmUmJpwExvS-n_ZW2QUdXAUH8PxR8'
+	iam_apikey: process.env.IBM_KEY
 });
 
-const images_file = fs.createReadStream('../backend/assets/truePositives/human1.jpeg');
+const images_file = fs.createReadStream('./assets/truePositives/human1.jpeg');
 const classifier_ids = ["DefaultCustomModel_1998152133"];
 const threshold = 0.6;
 
@@ -25,19 +27,24 @@ const params = {
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.post('/',function(req,res){
-  visualRecognition.classify(params, function(err, response) {
-  	if (err) {
-  		console.log(err);
-  	} else {
-      res.send(response);
-  	}
-  });
-});
+const classify = () => {
+  return new Promise((resolve, reject) => {
+    visualRecognition.classify(params, function(err, response) {
+    	if (err) {
+    		console.error("Error from Visual Rec Module", err);
+        reject(err);
+    	} else {
+        console.log("Visual Rec Response", response);
+        resolve(response);
+    	}
+    });
+  })
+}
 
-app.listen(3000, () => {
-  console.log("App Started .......");
-})
+app.get('/',async function(req,res, next){
+  const response =  await classify();
+  res.json(response)
+});
 
 
 module.exports = app;

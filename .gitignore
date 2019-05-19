@@ -1,0 +1,27 @@
+*.sublime-*
+*.swo
+*.swp
+*.tgz
+*.xml
+.DS_Store
+.idea
+.project
+.strong-pm
+coverage
+node_modules
+npm-debug.log
+*test/server-pids.json
+*suman/logs/
+*/test-target/
+npm-debug.log*
+*test/server-logs
+coverage-crucible
+test/server-pids.json
+*server-pids*
+.envrc
+envrc
+
+# Elastic Beanstalk Files
+.elasticbeanstalk/*
+!.elasticbeanstalk/*.cfg.yml
+!.elasticbeanstalk/*.global.yml
