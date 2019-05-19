@@ -10,7 +10,6 @@ app.listen(app.get('port'), () => {
 });
 
 const server = awsServerlessExpress.createServer(app);
-console.log("Server")
 
 exports.handler = (event, context) => {
   try {

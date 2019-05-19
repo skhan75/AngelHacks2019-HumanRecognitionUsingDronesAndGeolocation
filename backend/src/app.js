@@ -2,6 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const bodyParser = require("body-parser");
 const awsServerlessExpressMiddleware = require('aws-serverless-express/middleware');
+const dummyTargetMarkers = require('../data/dummyTargetMarkers');
 
 const app = express();
 app.use(awsServerlessExpressMiddleware.eventContext());
@@ -42,8 +43,21 @@ const classify = () => {
 }
 
 app.get('/',async function(req,res, next){
-  const response =  await classify();
-  res.json(response)
+  let response =  await classify();
+
+  // TODO: To be removed when real integration is done
+  /*
+  Mocking Drone response for Geo tagged coordinates.
+  Assuming its also coming with the response
+  */
+  response.images.forEach(each => {
+    each.classifiers.forEach((res,i ) => {
+      const {lat:latitude, lng:longitude} =  dummyTargetMarkers.targets[i];
+      res["coordinates"] = {latitude, longitude}
+    })
+  });
+
+  res.json(response);
 });
 
 
