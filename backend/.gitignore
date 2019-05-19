@@ -20,6 +20,7 @@ test/server-pids.json
 *server-pids*
 .envrc
 envrc
+.env.local
 
 # Elastic Beanstalk Files
 .elasticbeanstalk/*
